@@ -30,7 +30,7 @@ function closeModal() {
   modalbg.style.display = "none";
 }
 
-//fonction, vérification de la taille du prénom
+/*//fonction, vérification de la taille du prénom
 function validerPrenom(){
   let prenom = document.getElementById("first");
   var usePrenom = prenom.value;
@@ -52,7 +52,24 @@ function validerNom(){
     formData.dataset.errorVisible = true;
     return false;
   }return true
+}*/
+
+function isValidate(field, condition){
+  return condition(field.value);
 }
+
+function showError(field, errorMessage){
+  const formData = field.closest('.formData');
+  formData.dataset.error = errorMessage;
+  formData.dataset.errorVisible = true;
+}
+
+function hideError(field){
+  const formData = field.closest('.formData');
+  formData.dataset.error = "";
+  formData.dataset.errorVisible = false;
+}
+
 
 //fonction, vérification de le format du mail
 function valideEmail(){
@@ -136,7 +153,7 @@ elementsWithDataError.forEach(element => {
 }
 
 // Quand on submit
-form.addEventListener("submit", (event) => {
+/*form.addEventListener("submit", (event) => {
   // On empêche le comportement par défaut
   event.preventDefault();
   removeError();
@@ -155,7 +172,79 @@ form.addEventListener("submit", (event) => {
     // Toutes les validations sont réussies, soumission du formulaire
     form.submit();
   }
-});
+});*/
 
+
+// Quand on submit
+form.addEventListener("submit", (event) => {
+  // On empêche le comportement par défaut
+  event.preventDefault();
+  const checkList = [
+    {
+      id: "first",
+      condition: v => v.length > 2,
+      errorMessage: "Le prénom doit contenir au minimum 2 caractères"
+    },
+    {
+      id: "last",
+      condition: v => v.length > 3,
+      errorMessage: "Le nom doit contenir au minimum 3 caractères"
+    },
+    {
+      id: "email",
+      condition: v => /^[a-zA-Z._-]+@[a-z._-]+\.[a-z]/.test(v),
+      errorMessage: "Veulliez saisir une adresse email valide"
+    },
+    {
+      id: "birthdate",
+      condition: v => /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/.test(v),
+      errorMessage: "Veulliez saisir une date valide"
+    },
+    {
+      id: "quantity",
+      condition: v => v > 0,
+      errorMessage: "Veulliez saisir un nombre"
+    },
+    {
+      id: "location1",
+      condition: () => {
+        const radioButtons = document.querySelectorAll('input[type="radio"]');
+        for (let i = 0; i < radioButtons.length; i++) {
+            if (radioButtons[i].checked) {
+                return true; // Au moins un bouton radio est sélectionné
+            }
+        }
+        return false; // Aucun bouton radio n'est sélectionné
+    },
+      errorMessage: "Veuillez sélectionner une option."
+    },
+    {
+      id: "checkbox1",
+      condition: v => document.getElementById("checkbox1").checked,
+      errorMessage: "Veuillez accepter les conditions d'utilisation"
+    }
+  ];
+
+  let isValid = true;
+
+  /*checkList.forEach(obj => {
+    const element = document.getElementById(obj.id);
+    isValidate(element, obj.condition) ? hideError(element) && isValid === true : showError(element, obj.errorMessage) && isValid === false;
+  });*/
+  // Vérification de chaque élément dans checkList
+  checkList.forEach(obj => {
+    const element = document.getElementById(obj.id);
+    if (!isValidate(element, obj.condition)) {
+      showError(element, obj.errorMessage);
+      isValid = false;
+    } else {
+      hideError(element);
+    }
+  });
+
+  if (isValid) {
+    form.submit(); // Envoyer le formulaire
+  };
+});
 
 
