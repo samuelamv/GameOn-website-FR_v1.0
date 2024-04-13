@@ -97,7 +97,7 @@ img {
   .topnav a.icon {
     float: right;
     display: block;
-    margin-top: -15px;
+    /*margin-top: -15px;*/
   }
 } 
 
@@ -527,3 +527,46 @@ footer {
   }
 }
 
+@media screen and (max-width: 425px) {
+
+  .header-logo {
+    padding-left: 30px;
+    margin: 15px 0;
+}
+
+.header-logo img {
+  width: 150px;
+}
+
+  .hero-headline {
+    font-size: 3.0rem;
+}
+
+  .hero-content {
+    min-width: 0;
+}
+
+}
+
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+
+  .topnav {
+    display: flex;
+    flex-direction: row;
+}
+
+  .header-logo {
+    width: 20%;
+    margin: auto;
+}
+
+.header-logo img {
+  width: 100%;
+}
+
+.main-navbar {
+  width: 80%;
+}
+
+
+}
